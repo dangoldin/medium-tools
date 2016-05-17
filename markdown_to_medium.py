@@ -50,6 +50,13 @@ def post_to_medium(data):
     r = requests.post(url, data=data, headers=headers)
     if r.status_code >= 300: # All below 200 are good
         print 'Error: ', r.content
+
+        # Quick hack to handle error of type: {"errors":[{"message":"Unexpected fields specified.","code":6007}]}
+        # Figured out this was due to invalid tags. In this case we can post and remove the tags
+        if '6007' in r.content:
+            print 'Trying to post without tags'
+            del(data['tags'])
+            return post_to_medium(data)
         return False
     return True
 
