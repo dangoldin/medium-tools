@@ -46,15 +46,15 @@ def parse_markdown(fn):
     return data
 
 def post_to_medium(data):
-    print 'Publishing:', data
+    print('Publishing:', data)
     r = requests.post(url, data=data, headers=headers)
     if r.status_code >= 300: # All below 200 are good
-        print 'Error: ', r.content
+        print('Error: ', r.content)
 
         # Quick hack to handle error of type: {"errors":[{"message":"Unexpected fields specified.","code":6007}]}
         # Figured out this was due to invalid tags. In this case we can post and remove the tags
-        if '6007' in r.content:
-            print 'Trying to post without tags'
+        if '6007' in str(r.content):
+            print('Trying to post without tags')
             del(data['tags'])
             return post_to_medium(data)
         return False
@@ -63,7 +63,7 @@ def post_to_medium(data):
 # python markdown_to_medium.py ~/Dropbox/dev/web/dangoldin.github.com/_posts/2016-05-11-identifying-unused-database-tables.md
 if __name__ == '__main__':
     if len(sys.argv) != 2:
-        print 'You must specify a markdown post to convert'
+        print('You must specify a markdown post to convert')
 
     post_filename = sys.argv[1]
 
@@ -72,4 +72,4 @@ if __name__ == '__main__':
     if data and 'content' in data:
         post_to_medium(data)
     else:
-        print 'Failed to extract post data from markdown'
+        print('Failed to extract post data from markdown')
